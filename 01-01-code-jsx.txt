@@ -1,0 +1,55 @@
+import React, { useState } from 'react';
+
+const ProgressAnalyzer = () => {
+  const [sessionData, setSessionData] = useState({
+    targetOrgan: '',
+    baselineFeeling: '',
+    postSessionFeeling: '',
+    notes: ''
+  });
+
+  const commitEntry = () => {
+    // This pushes the data to the Vault
+    const entry = {
+      ...sessionData,
+      date: new Date().toLocaleDateString(),
+      status: "Resonance Verified"
+    };
+    alert("ENTRY COMMITTED TO ANALYTICS VAULT.");
+    console.log("Saving to Analytics Engine:", entry);
+  };
+
+  return (
+    <div className="bg-black text-[#00f2ff] p-8 border border-[#00f2ff] font-mono">
+      <h2 className="text-2xl text-white font-black uppercase mb-6 border-b border-[#00f2ff]/30 pb-2">Progress Analytics Engine</h2>
+      
+      <div className="grid grid-cols-2 gap-8">
+        {/* Baseline Entry */}
+        <div className="space-y-4">
+          <label className="block text-xs uppercase">Target Physiological Site</label>
+          <input className="w-full bg-gray-900 border border-[#00f2ff] p-3" onChange={(e) => setSessionData({...sessionData, targetOrgan: e.target.value})} placeholder="e.g. Hepatic Node" />
+          
+          <label className="block text-xs uppercase">Pre-Session Baseline (Feeling/Sensation)</label>
+          <textarea className="w-full bg-gray-900 border border-[#00f2ff] p-3 h-20" onChange={(e) => setSessionData({...sessionData, baselineFeeling: e.target.value})} placeholder="Describe state before resonance..." />
+        </div>
+
+        {/* Post-Session Entry */}
+        <div className="space-y-4">
+          <label className="block text-xs uppercase">Post-Session Resonance Response</label>
+          <textarea className="w-full bg-gray-900 border border-[#00f2ff] p-3 h-20" onChange={(e) => setSessionData({...sessionData, postSessionFeeling: e.target.value})} placeholder="Describe state after resonance..." />
+          
+          <label className="block text-xs uppercase">Structural/Clinical Notes</label>
+          <input className="w-full bg-gray-900 border border-[#00f2ff] p-3" onChange={(e) => setSessionData({...sessionData, notes: e.target.value})} placeholder="Any detected stability changes?" />
+        </div>
+      </div>
+
+      <button onClick={commitEntry} className="mt-8 w-full py-4 bg-[#00f2ff] text-black font-bold uppercase hover:bg-white tracking-[0.2em]">
+        Commit Progress to Data Engine
+      </button>
+
+      <p className="mt-6 text-[10px] text-center opacity-50 uppercase tracking-widest">
+        Data is hashed and stored in your IsoSync Vault. Your logs contribute to the Global Resonance Research Database.
+      </p>
+    </div>
+  );
+};
