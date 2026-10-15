@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" href="data:,">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IsoSync — Progress Analytics Engine</title>
@@ -66,13 +67,17 @@ h2{font-size:22px;color:#fff;font-weight:900;text-transform:uppercase;margin-bot
 
   <div class="vault-entries" id="vaultEntries"></div>
 
-  <div class="disclaimer">Data is hashed and stored in your IsoSync Vault. Your logs contribute to the Global Resonance Research Database.</div>
+  <div class="disclaimer" role="note">LOCAL SESSION ONLY: entries are held in this page memory and disappear when you reload or close it. They are not hashed, uploaded, or sent to a research database.</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 const vault = [];
+
+function esc(value) {
+  return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 function commitEntry() {
   const target = document.getElementById('targetOrgan').value.trim();
@@ -93,7 +98,7 @@ function commitEntry() {
     notes: notes || 'N/A',
     date: new Date().toLocaleDateString(),
     time: new Date().toLocaleTimeString(),
-    status: 'Resonance Verified'
+    status: 'Session-only entry'
   };
 
   vault.unshift(entry);
@@ -105,9 +110,9 @@ function commitEntry() {
   document.getElementById('postSessionFeeling').value = '';
   document.getElementById('notes').value = '';
 
-  showToast('ENTRY COMMITTED TO ANALYTICS VAULT');
+  showToast('Entry added to this page session only; not uploaded or durably saved.');
 
-  console.log('Saving to Analytics Engine:', entry);
+  // This static export has no persistence or analytics backend.
 }
 
 function renderVault() {
@@ -116,13 +121,13 @@ function renderVault() {
   el.innerHTML = '<h3>Vault Entries (' + vault.length + ')</h3>' +
     vault.map(e =>
       '<div class="entry">' +
-      '<div class="e-header"><span class="e-date">' + e.date + ' ' + e.time + '</span><span class="e-status">' + e.status + '</span></div>' +
+      '<div class="e-header"><span class="e-date">' + esc(e.date) + ' ' + esc(e.time) + '</span><span class="e-status">' + esc(e.status) + '</span></div>' +
       '<div class="e-body">' +
-      '<div class="e-label">Target Site</div>' + e.target +
-      (e.baseline !== 'N/A' ? '<div class="e-label">Baseline</div>' + e.baseline : '') +
-      (e.postSession !== 'N/A' ? '<div class="e-label">Post-Session</div>' + e.postSession : '') +
-      (e.notes !== 'N/A' ? '<div class="e-label">Notes</div>' + e.notes : '') +
-      '<div style="margin-top:4px;font-size:9px;color:var(--muted)">ID: ' + e.id + '</div>' +
+      '<div class="e-label">Target Site</div>' + esc(e.target) +
+      (e.baseline !== 'N/A' ? '<div class="e-label">Baseline</div>' + esc(e.baseline) : '') +
+      (e.postSession !== 'N/A' ? '<div class="e-label">Post-Session</div>' + esc(e.postSession) : '') +
+      (e.notes !== 'N/A' ? '<div class="e-label">Notes</div>' + esc(e.notes) : '') +
+      '<div style="margin-top:4px;font-size:9px;color:var(--muted)">ID: ' + esc(e.id) + '</div>' +
       '</div></div>'
     ).join('');
 }
